@@ -16,8 +16,8 @@ from pathlib import Path
 from tkinter.filedialog import askopenfilename, asksaveasfile, askdirectory
 from pick import pick
 import logging
-from JSON_Elements.JSON_Songs import JSON_Songs
-from JSON_Elements.JSON_Notes import JSON_Notes
+from playdate_midi_converter.JSON_Elements.JSON_Songs import JSON_Songs
+from playdate_midi_converter.JSON_Elements.JSON_Notes import JSON_Notes
 from MIDI_Elements.MIDI_Track import MIDI_Track
 
 logging.basicConfig(level=logging.DEBUG)
