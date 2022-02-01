@@ -27,6 +27,8 @@ def main():
     noteMultiplier = 0.0
     
     # have the user select a MIDI file
+    # or if DEV_MODE constant is set to "True", use
+    # the Demo File contained in the project
     if DEV_MODE:
         dirname = os.path.dirname(os.path.realpath("__file__"))
         fileName = os.path.join(dirname,"Demo Files/FartyBird_Score.mid")
