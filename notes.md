@@ -23,9 +23,11 @@
     2. The octave (0 through 8)  
     3. The duration as the - number of 16th notes  
     
-Empty 1/16 note positions are reported as **0,0,0**
+Empty 1/16 note positions are reported as **0,0,0** - ***this includes 1/16 note positions that occur under sustained notes*** 
 
 **512** total positions available (number of 16'th slots)
+
+MIDI Note Reference Chart: https://djip.co/blog/logic-studio-9-midi-note-numbers
 
 Sample MIDI track data:
 ```

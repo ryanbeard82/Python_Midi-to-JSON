@@ -12,9 +12,9 @@ class JSON_Songs():
         self.id = id
         self.bpm = bpm
         self.name = name
-        self.sineNotes = []
-        self.squareNotes = []
-        self.sawNotes = []
-        self.triNotes = []
-        self.noiseNotes = []
-        self.ticks = None
+        self.sineNotes = None
+        self.squareNotes = None
+        self.sawNotes = None
+        self.triNotes = None
+        self.noiseNotes = None
+        self.ticks = 0
