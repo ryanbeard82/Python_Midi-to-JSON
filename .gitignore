@@ -2,3 +2,5 @@
 .MIDItoJSON
 .idea
 **/__pycache__
+build
+**/*.egg-info
