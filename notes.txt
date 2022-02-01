@@ -1,0 +1,24 @@
+General JSON file format notes:
+[{
+    "id":[SONG ID NUMBER - 0 based index],
+    "bpm":[bpm integer]
+    "name":["name of song as string"]
+    "notes:
+    [[(sine track notes)],
+    [(square track notes)],
+    [(sawtooth track notes)],
+    [(triangle track notes)],
+    [(noise track notes)],
+    ]
+    "ticks":[number of 1/6th notes in length of the total track],
+    "splits": [[sine split locations, in 16'th notes],[square],[sawtooth],[triangle],[noise]],
+    "voices":[optional - voice adjustments]
+    "loopFrom": [optional loop starting position]
+}]
+
+Each note receives 3 values:
+    1) The note value on a 12 note linear scale (e.g. 1 = C, 12 = B)
+    2) The octave (0 through 8)
+    3) The duration as the - number of 16th notes
+    
+Empty positions 1/16 note positions are reported as 0,0,0
