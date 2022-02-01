@@ -22,3 +22,20 @@ Each note receives 3 values:
     3) The duration as the - number of 16th notes
     
 Empty positions 1/16 note positions are reported as 0,0,0
+
+512 total positions available (number of 16'th slots)
+
+Sample MIDI track data:
+
+for msg in yourMidiFile.tracks[4]: print(msg.dict())
+{'type': 'channel_prefix', 'channel': 0, 'time': 0}
+{'type': 'track_name', 'name': 'Rhythm - Snare', 'time': 0}
+{'type': 'instrument_name', 'name': 'Rhythm - Snare', 'time': 0}
+{'type': 'note_on', 'time': 0, 'note': 41, 'velocity': 100, 'channel': 0}
+{'type': 'note_on', 'time': 0, 'note': 46, 'velocity': 100, 'channel': 0}
+{'type': 'note_off', 'time': 120, 'note': 41, 'velocity': 64, 'channel': 0}
+{'type': 'note_off', 'time': 0, 'note': 46, 'velocity': 64, 'channel': 0}
+{'type': 'note_on', 'time': 120, 'note': 38, 'velocity': 100, 'channel': 0}
+{'type': 'note_off', 'time': 120, 'note': 38, 'velocity': 64, 'channel': 0}
+{'type': 'note_on', 'time': 120, 'note': 41, 'velocity': 100, 'channel': 0}
+{'type': 'note_off', 'time': 120, 'note': 41, 'velocity': 64, 'channel': 0}
