@@ -29,8 +29,7 @@ MAX_NOTES = 512
 
 songBPM = 0
 ticksPerBeat = 0
-sixteenthNoteDeafalt = 0
-noteMultiplier = 0
+sixteenthNoteDefault = 0
 songTicks = 0
 
 def main():
@@ -39,8 +38,7 @@ def main():
     #identify globals
     global songBPM
     global ticksPerBeat
-    global sixteenthNoteDeafalt
-    global noteMultiplier
+    global sixteenthNoteDefault
     global songTicks
     
     # have the user select a MIDI file
@@ -66,16 +64,18 @@ def main():
     # get bpm and clock info
     songBPM = getMIDI_BPM(yourMidiFile)
     ticksPerBeat = yourMidiFile.ticks_per_beat
-    sixteenthNoteDeafalt = ticksPerBeat/4
-    
-    # TODO: Evaluate all messages for lowest msg.time, then update noteMultiplier / BPM
-    # TODO: Join MIDI Tracks by Instrument (e.g. to handle Logic Regions on Export)
+    sixteenthNoteDefault = ticksPerBeat/4
     
     logging.info("MIDI Ticks per beat: " + str(yourMidiFile.ticks_per_beat))
     logging.info("MIDI BPM: " + str(songBPM))
     
-    # evaluate tracks
+    # capture all tracks
     midiTracks = getTracks(yourMidiFile)
+    
+    # TODO: Join MIDI Tracks by Instrument (e.g. to handle Logic Regions on Export)
+    
+    # evaluate tracks to get lowest note value (1/16, 1/32 or 1/64)
+    getNoteMultiplier(yourMidiFile)
     
     # assign pulp synth channels
     tracksAssigned = getTrackMapping(midiTracks)
@@ -117,6 +117,35 @@ def main():
     
     sys.exit("Exiting application.")
 
+def getNoteMultiplier(midiFile: MidiFile) -> int:
+    # evaluate notes to get the note/bpm multiplier
+    
+    # define variables
+    lowestTime = None
+    global sixteenthNoteDefault
+    global songBPM
+    
+    # find the lowest non-zero note time
+    # does not account for polyphone / concurrent note events
+    for track in midiFile.tracks:
+        for msg in track:
+            if not msg.is_meta and msg.time > 0:
+                if lowestTime == None or lowestTime > msg.time: lowestTime = msg.time
+    
+    # since 16th notes are lowest avialable Pulp audio resolution, adjust song translation accordingly
+    if lowestTime > sixteenthNoteDefault:
+        # update BPM and sixteenth note time if lowest note value is an even multiple
+        if lowestTime % sixteenthNoteDefault == 0:
+            # slow the BPM to account for the decrease in resolution - this allows more song time
+            songBPM = round(songBPM / (lowestTime / sixteenthNoteDefault))
+            sixteenthNoteDefault = lowestTime
+    elif lowestTime < sixteenthNoteDefault:
+        # update BPM and sixteenth note time if lowest note value is an even multiple
+        if sixteenthNoteDefault % lowestTime == 0:
+            # increase the BPM to account for the increase in resolution - will result in less song time
+            songBPM = round(songBPM * (sixteenthNoteDefault/lowestTime))
+            sixteenthNoteDefault = lowestTime
+    
 def getMIDI_BPM(midiFile: MidiFile) -> int:
     # convert tempo to BPM
     
@@ -258,7 +287,7 @@ def getNotes(midiTrack: MIDI_Track) -> JSON_Notes:
                     deltaTime += msg.time
                 else:
                     if msg.time != 0:
-                        restEvents = int(msg.time / sixteenthNoteDeafalt)
+                        restEvents = int(msg.time / sixteenthNoteDefault)
                         while restEvents != 0:
                             # add empty events for rest positions
                             newJSONnote = JSON_Notes(0,0,0)
@@ -283,9 +312,9 @@ def getNotes(midiTrack: MIDI_Track) -> JSON_Notes:
                 noteLen = getNoteLength(deltaTime)
                 convertedMIDINotes[lastNoteIndex].length = noteLen
                 
-                if deltaTime / sixteenthNoteDeafalt >= 2:
+                if deltaTime / sixteenthNoteDefault >= 2:
                     # add empty events for sustained note durations
-                    restEvents = int(deltaTime / sixteenthNoteDeafalt)
+                    restEvents = int(deltaTime / sixteenthNoteDefault)
                     restEvents -= 1 # accounts for note data already stored above
                     
                     while restEvents != 0:
@@ -296,7 +325,7 @@ def getNotes(midiTrack: MIDI_Track) -> JSON_Notes:
                         restEvents -= 1
         else: # capture channel_prefix for delayed start time
             if msg.type == "channel_prefix" and msg.time > 0:
-                restEvents = int(msg.time / sixteenthNoteDeafalt)
+                restEvents = int(msg.time / sixteenthNoteDefault)
                 while restEvents != 0:
                     # add empty events for rest positions
                     newJSONnote = JSON_Notes(0,0,0)
@@ -329,10 +358,10 @@ def getNoteOctave(noteInt: int) -> int:
 def getNoteLength(noteTime: int) -> int:
     # gets JSON note length (in 16ths) from MIDI note time
     
-    if noteTime < sixteenthNoteDeafalt:
+    if noteTime < sixteenthNoteDefault:
         noteLen = 1
     else:
-        noteLen = int(noteTime / sixteenthNoteDeafalt)
+        noteLen = int(noteTime / sixteenthNoteDefault)
     
     return noteLen
 
