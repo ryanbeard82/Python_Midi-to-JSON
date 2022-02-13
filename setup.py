@@ -1,10 +1,13 @@
 from setuptools import setup, find_packages
-from playdate_midi_converter.__version__ import __VERSION__ as PKG_VERSION
+from src.playdate_midi_converter.__version__ import __VERSION__ as PKG_VERSION
 
 setup(
   name='playdate-midi-converter',
   version=PKG_VERSION,
-  packages=find_packages(),
+  packages=find_packages(where='src'),
+  package_dir={
+    '': 'src'
+  },
   url='https://github.com/ryanbeard82/Python-Midi-to-JSON',
   license='',
   author='Ryan Beard',
