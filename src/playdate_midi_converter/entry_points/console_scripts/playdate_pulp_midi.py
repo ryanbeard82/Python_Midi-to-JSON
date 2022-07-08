@@ -1,5 +1,6 @@
+from io import TextIOWrapper
 import sys
-from argparse import ArgumentParser, FileType
+from argparse import ArgumentError, ArgumentParser, FileType
 from logging import DEBUG
 
 from playdate_midi_converter.__version__ import __VERSION__
@@ -25,6 +26,11 @@ def run():
   cfg = Config()
   ctx = Context(cfg, log_level=DEBUG)
   try:
+    file_in: TextIOWrapper = args.file_in
+
+    if file_in == sys.stdin and file_in.isatty():
+      raise Exception("Input file not specified.")
+    
     midi = Midi(ctx, args.file_in, clip=True)
   except Exception as e:
     ctx.log_manager.root.error(f"Midi file read error: {e!s}")
@@ -71,4 +77,3 @@ def run():
   
   ctx.log_manager.root.info(f"SUCCESS!")
   sys.exit(0)
-  
