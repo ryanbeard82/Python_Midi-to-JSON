@@ -77,7 +77,7 @@ def run():
   song.tracks = tracks
   
   try:
-    song_json = song_to_json(song, args.pretty)
+    song_json = song_to_json([song], args.pretty)
   except Exception as e:
     ctx.log_manager.root.error(f"Song conversion error: {e!s}")
     sys.exit(1)
