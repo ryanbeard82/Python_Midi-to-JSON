@@ -55,6 +55,8 @@ class CliChannelMapper(UserIO, ChannelMapper):
         track_names = map(lambda t: t.name, mappings.keys())
         max_track_width = max(map(len, track_names))
         for track, channel in mappings.items():
+            if channel is None:
+                continue
             msg += f"\t{track.name:<{max_track_width}} => {channel.name.lower().capitalize()}\n"
         msg += '\n'
         self.print(msg)

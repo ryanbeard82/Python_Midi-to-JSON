@@ -31,9 +31,14 @@ def run():
 
     if file_in == sys.stdin and file_in.isatty():
       file_name = open_file(ctx)
-      ctx.log_manager.root.info(f"User chose file: {file_in}")
+
       if file_name is None:
-        raise Exception("Input file not specified.")
+        ctx.log_manager.root.error(f"Input file not specified.")
+        par.print_help()
+        sys.exit(1)
+
+      ctx.log_manager.root.info(f"User chose file: {file_name}")
+
       file_in = open(file_name, mode='rb')
     
     midi = Midi(ctx, file_in, clip=True)
@@ -53,13 +58,16 @@ def run():
   
   keep_name = False
   while not keep_name:
-    song_name = mapper.read_line(f"Song name? ").strip()
-    keep_name = mapper.yes_no(f"Song name \"{song_name}\". Continue?")
+    song.name = mapper.read_line(f"Song name? ").strip()
+    keep_name = mapper.yes_no(f"Song name \"{song.name}\". Continue?")
   
   channels = list(Channel)
-  tracks = list(song.tracks)
-  track_mappings = mapper.tracks_to_channels(tracks, channels)
+  tracks = list()
+  track_mappings = mapper.tracks_to_channels(song.tracks, channels)
   for track, channel in track_mappings.items():
+    if channel is None: # Ignored
+      continue
+    tracks.append(track)
     track.channel = channel
     channels.remove(channel)
   for channel in channels:
