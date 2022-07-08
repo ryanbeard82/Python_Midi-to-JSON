@@ -9,6 +9,7 @@ from playdate_midi_converter.midi import Midi
 from playdate_midi_converter.config import Config, Context
 from playdate_midi_converter.json import song_to_json
 from playdate_midi_converter.ui.cli.channel_mapping import CliChannelMapper
+from playdate_midi_converter.ui.input import open_file
 from playdate_midi_converter.song import Channel, Track
 
 
@@ -26,12 +27,16 @@ def run():
   cfg = Config()
   ctx = Context(cfg, log_level=DEBUG)
   try:
-    file_in: TextIOWrapper = args.file_in
+    file_in = args.file_in
 
     if file_in == sys.stdin and file_in.isatty():
-      raise Exception("Input file not specified.")
+      file_name = open_file(ctx)
+      ctx.log_manager.root.info(f"User chose file: {file_in}")
+      if file_name is None:
+        raise Exception("Input file not specified.")
+      file_in = open(file_name, mode='rb')
     
-    midi = Midi(ctx, args.file_in, clip=True)
+    midi = Midi(ctx, file_in, clip=True)
   except Exception as e:
     ctx.log_manager.root.error(f"Midi file read error: {e!s}")
     sys.exit(1)

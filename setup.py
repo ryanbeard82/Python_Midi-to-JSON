@@ -15,7 +15,14 @@ setup(
   description='Library to convert Playdate Pulp IDE\'s JSON files to MIDI.',
   entry_points={
     'console_scripts': [
-      'playdate-pulp-midi = playdate_midi_converter.entry_points.console_scripts.playdate_pulp_midi:run'
+      'playdate-pulp-midi = playdate_midi_converter.entry_points.console_scripts.playdate_pulp_midi:run',
     ],
   },
+  install_requires=[
+    'mido',
+    'pathlib',
+    'pick',
+    'turtle',
+    'PyYAML',
+  ],
 )

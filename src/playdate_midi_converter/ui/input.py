@@ -1,4 +1,5 @@
 from tkinter.filedialog import askopenfilename
+from pathlib import Path
 from pick import pick
 
 from playdate_midi_converter.config import Context
