@@ -22,6 +22,5 @@ setup(
     'mido',
     'pathlib',
     'pick',
-    'PyYAML',
   ],
 )
