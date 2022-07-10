@@ -1,4 +1,4 @@
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, askdirectory
 from pathlib import Path
 from pick import pick
 
@@ -26,3 +26,21 @@ def open_file(context: Context):
     else:
         context.get_logger('open_file').info("Cancelled")
         return None
+
+
+def choose_save_dir(context: Context, initial_dir: str):
+    """Use tkinter to choose a save directory."""
+    if initial_dir is None:
+        initial_dir = str(Path.home())
+    save_dir = askdirectory(
+        initialdir=initial_dir,
+        mustexist=True,
+        title="Choose save directory for JSON file."
+        )
+    if save_dir:
+        return save_dir
+    else:
+        context.get_logger('save_file').info('Cancelled')
+        return None
+
+

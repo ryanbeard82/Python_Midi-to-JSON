@@ -1,6 +1,6 @@
-from io import TextIOWrapper
+import os
 import sys
-from argparse import ArgumentError, ArgumentParser, FileType
+from argparse import ArgumentParser, FileType
 from logging import DEBUG
 
 from playdate_midi_converter.__version__ import __VERSION__
@@ -9,7 +9,7 @@ from playdate_midi_converter.midi import Midi
 from playdate_midi_converter.config import Config, Context
 from playdate_midi_converter.json import song_to_json
 from playdate_midi_converter.ui.cli.channel_mapping import CliChannelMapper
-from playdate_midi_converter.ui.input import open_file
+from playdate_midi_converter.ui.input import open_file, choose_save_dir
 from playdate_midi_converter.song import Channel, Track
 
 
@@ -56,6 +56,32 @@ def run():
   
   mapper = CliChannelMapper()
   
+  try:
+    file_out = args.file_out
+
+    if file_out == sys.stdout:
+      # Output file was not specified. Ask whether to save.
+      out_file_name_is_valid = False
+      while not out_file_name_is_valid:
+        if mapper.yes_no("Save to file?"):
+          start_dir = None
+          if file_name is not None:
+            start_dir = os.path.dirname(file_name)
+        
+        dir_out = choose_save_dir(ctx, initial_dir=start_dir)
+        
+        out_file_name = os.path.join(dir_out, os.path.basename(file_name)) + ".json"
+
+        if os.path.exists(out_file_name):
+          out_file_name_is_valid = mapper.yes_no(f"File exists. Overwrite?", default_yes=False)
+        else:
+          out_file_name_is_valid = True
+
+      file_out = open(out_file_name, mode='w')
+  except Exception as e:
+    ctx.log_manager.root.error(f"Error choosing save directory: {e!s}")
+    sys.exit(1)
+  
   keep_name = False
   while not keep_name:
     song.name = mapper.read_line(f"Song name? ").strip()
@@ -83,7 +109,7 @@ def run():
     sys.exit(1)
   
   try:
-    args.file_out.write(song_json)
+    file_out.write(song_json)
   except Exception as e:
     ctx.log_manager.root.error(f"JSON file write error: {e!s}")
     sys.exit(1)
