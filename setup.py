@@ -9,10 +9,10 @@ setup(
     '': 'src'
   },
   url='https://github.com/ryanbeard82/Python-Midi-to-JSON',
-  license='',
+  license='MIT',
   author='Ryan Beard',
   author_email='ryan_o_beard@me.com',
-  description='Library to convert MIDI files to Playdate Pulp IDE\'s JSON format.',
+  description='Library to convert MIDI files to the PlayDate Pulp IDE\'s JSON format.',
   entry_points={
     'console_scripts': [
       'playdate-pulp-midi = playdate_midi_converter.entry_points.console_scripts.playdate_pulp_midi:run',
@@ -23,4 +23,5 @@ setup(
     'pathlib',
     'pick',
   ],
+  python_requires='>=3.9.*',
 )

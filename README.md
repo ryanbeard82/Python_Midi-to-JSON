@@ -1,4 +1,6 @@
 #PlayDate Pulp Midi-to-JSON Converter
+*Developed by Ryan Beard and Anthony Beard of [Bro-Code.dev](https://bro-code.dev)
+
 *This simple command line utility to convert standard MIDI (.mid) files into the PlayDate Pulp's JSON (.json) audio schema for import into the web-based development environment.*
 
 ##The PlayDate Pulp's JSON Audio Format Spec
@@ -54,7 +56,7 @@ To install the PlayDate Midi Converter, run the following command:
 
     pip install playdate-midi-converter
 
-Note that the PlayDate MIDI Converter requires **Python 3.9.x** or higher.
+Note that the PlayDate MIDI Converter requires **Python 3.9.\*** or higher.
 
 During installation, the following dependencies will also be installed:
 - mido v1.2.10
