@@ -61,23 +61,24 @@ def run():
 
     if file_out == sys.stdout:
       # Output file was not specified. Ask whether to save.
-      out_file_name_is_valid = False
-      while not out_file_name_is_valid:
-        if mapper.yes_no("Save to file?"):
-          start_dir = None
-          if file_name is not None:
-            start_dir = os.path.dirname(file_name)
-        
-        dir_out = choose_save_dir(ctx, initial_dir=start_dir)
-        
-        out_file_name = os.path.join(dir_out, os.path.basename(file_name)) + ".json"
 
-        if os.path.exists(out_file_name):
-          out_file_name_is_valid = mapper.yes_no(f"File exists. Overwrite?", default_yes=False)
-        else:
-          out_file_name_is_valid = True
+      if mapper.yes_no("Save to file?"):
+        save_dir = None
+        if file_name is not None:
+          save_dir = os.path.dirname(file_name)
+        
+        out_file_name_is_valid = False
+        while not out_file_name_is_valid:
+          save_dir = choose_save_dir(ctx, initial_dir=save_dir)
+          
+          out_file_name = os.path.join(save_dir, os.path.basename(file_name)) + ".json"
 
-      file_out = open(out_file_name, mode='w')
+          if os.path.exists(out_file_name):
+            out_file_name_is_valid = mapper.yes_no(f"File exists. Overwrite?", default_yes=False)
+          else:
+            out_file_name_is_valid = True
+
+        file_out = open(out_file_name, mode='w')
   except Exception as e:
     ctx.log_manager.root.error(f"Error choosing save directory: {e!s}")
     sys.exit(1)
