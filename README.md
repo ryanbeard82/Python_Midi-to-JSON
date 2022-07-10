@@ -1,9 +1,9 @@
-#PlayDate Pulp Midi-to-JSON Converter
+# PlayDate Pulp Midi-to-JSON Converter
 *Developed by Ryan Beard and Anthony Beard of [Bro-Code.dev](https://bro-code.dev)
 
 *This simple command line utility to convert standard MIDI (.mid) files into the PlayDate Pulp's JSON (.json) audio schema for import into the web-based development environment.*
 
-##The PlayDate Pulp's JSON Audio Format Spec
+## The PlayDate Pulp's JSON Audio Format Spec
 
 The Pulp's audio spec (*below*) follows a simple comma delimited schema that allows the import of multilple song contents within a single file.
 ```
@@ -50,7 +50,7 @@ Rests are stored as empty 1/6th note tuplets (*e.g. 0,0,0*). **This includes emp
 
 There are a total of **512** note positions available (*1/16th note slots*) in each pulp song.
 
-##Installing the PlayDate MIDI Converter
+## Installing the PlayDate MIDI Converter
 
 To install the PlayDate Midi Converter, run the following command:
 
@@ -62,7 +62,7 @@ During installation, the following dependencies will also be installed:
 - mido v1.2.10
 - pathlib v1.0.1
 - pick v1.2.0
-##Running the Audio Converter
+## Running the Audio Converter
 Run the PlayDate MIDI Converter with the following command:
 
     playdate-pulp-midi
