@@ -17,8 +17,8 @@ setup(
   author='Ryan Beard',
   author_email='ryan_o_beard@me.com',
   description='Library to convert MIDI files to the PlayDate Pulp IDE\'s JSON format.',
-  long_description=long_description
-  long_description_content_type='text/markdown'
+  long_description=long_description,
+  long_description_content_type='text/markdown',
   entry_points={
     'console_scripts': [
       'playdate-pulp-midi = playdate_midi_converter.entry_points.console_scripts.playdate_pulp_midi:run',
