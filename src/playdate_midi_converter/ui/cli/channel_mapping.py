@@ -7,6 +7,7 @@ from playdate_midi_converter.song import Track, Channel
 
 class CliChannelMapper(UserIO, ChannelMapper):
     def tracks_to_channels(self, tracks: List[Track], channels: List[Channel]) -> Mapping[Track, Channel]:
+        orig_channels = channels
         channels = channels.copy()
         results = {}
         for track in tracks:
@@ -17,7 +18,7 @@ class CliChannelMapper(UserIO, ChannelMapper):
         if self._confirm_mappings(results):
             return results
         if self.yes_no(f"Try again?"):
-            return self.tracks_to_channels(tracks, channels)
+            return self.tracks_to_channels(tracks, orig_channels)
         raise ChannelMappingCanceled()
     
     def _map_track(self, track: Track, channels: List[Channel]) -> Any:
